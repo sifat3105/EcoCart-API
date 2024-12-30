@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     'shipping',
     'analytics',
     'marketing',
+    'delivery',
+    'checkout'
 ]
 
 MIDDLEWARE = [
