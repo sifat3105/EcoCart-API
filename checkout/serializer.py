@@ -1,28 +1,30 @@
 from rest_framework import serializers
-from .models import Cart, CartItem
+from .models import CheckOut, CheckOutItem
 from products.models import Product
 from delivery.models import Delivery
 from decimal import Decimal
+
+
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ['id', 'name', 'price', 'image']
 
-class CartItemSerializer(serializers.ModelSerializer):
+class CheckOutItemSerializer(serializers.ModelSerializer):
     product = ProductSerializer()
     total_price = serializers.SerializerMethodField()
 
     class Meta:
-        model = CartItem
+        model = CheckOutItem
         fields = ['id', 'product', 'quantity', 'total_price']
 
     def get_total_price(self, obj):
         return obj.quantity * obj.product.price
 
-class CartSerializer(serializers.ModelSerializer):
+class CheckOutSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField()
-    items = CartItemSerializer(many=True)
+    items = CheckOutItemSerializer(many=True)
     shipping_fee = serializers.SerializerMethodField()
     subtotal = serializers.SerializerMethodField()
     discount = serializers.SerializerMethodField()
@@ -30,7 +32,7 @@ class CartSerializer(serializers.ModelSerializer):
     
 
     class Meta:
-        model = Cart
+        model = CheckOut
         fields = ['id', 'user', 'created_at', 'items', 'subtotal', 'shipping_fee', 'discount', 'total']
 
     def get_discount(self, obj):

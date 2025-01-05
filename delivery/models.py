@@ -1,17 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-class DeliveryZone(models.Model):
-    ZONE_TYPES = [
-        ('inside_city', 'Dhaka'),
-        ('outside_city', 'Outside City'),
-    ]
-    name = models.CharField(max_length=50, choices=ZONE_TYPES, unique=True)
-    description = models.TextField(blank=True, null=True)
-    delivery_charge = models.DecimalField(max_digits=10, decimal_places=2)
-
-    def __str__(self):
-        return f"{self.get_name_display()} ({self.delivery_charge} BDT)"
 
 
 class DeliveryOption(models.Model):
@@ -20,21 +9,13 @@ class DeliveryOption(models.Model):
         ('express', 'Express Delivery'),
         ('pickup', 'Store Pickup'),
     ]
-    name = models.CharField(max_length=50, choices=DELIVERY_TYPES)
+    name = models.CharField(max_length=50, choices=DELIVERY_TYPES ,default="standard")
     description = models.TextField(blank=True, null=True)
     delivery_fee = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    estimated_time = models.CharField(max_length=100)  # e.g., "3-5 business days"
-    zone = models.ManyToManyField(DeliveryZone, related_name='delivery_options', blank=True)
+    estimated_time = models.CharField(max_length=100)
 
     def __str__(self):
         return f"{self.get_name_display()}"
-
-    def get_delivery_charge(self, zone_name):
-        """
-        Returns the delivery charge based on the zone.
-        """
-        zone = self.zone.filter(name=zone_name).first()
-        return zone.delivery_charge if zone else self.delivery_fee
 
 
 class DeliveryAddress(models.Model):
@@ -57,8 +38,9 @@ class DeliveryAddress(models.Model):
     city = models.CharField(max_length=100)
     state = models.CharField(max_length=100, blank=True, null=True)
     postal_code = models.CharField(max_length=20)
-    country = models.CharField(max_length=100, default="Bangladesh")  # Adjust default as needed
+    country = models.CharField(max_length=100, default="Bangladesh")
     zone = models.CharField(max_length=50, choices=ZONE_TYPES, unique=True)
+    delivery_option = models.ForeignKey(DeliveryOption, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.full_name}, {self.address_line_1}, {self.city}"

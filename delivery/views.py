@@ -2,8 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView
 from rest_framework import status, permissions
 from rest_framework.response import Response
-from .serializer import DeliveryZoneSerializer, DeliverySerializer, DeliveryAddressSerializer, DeliveryOptionSerializer
-from . models import DeliveryZone, DeliveryOption, DeliveryAddress, Delivery
+from .serializer import DeliverySerializer, DeliveryAddressSerializer, DeliveryOptionSerializer
+from . models import  DeliveryOption, DeliveryAddress, Delivery
 
 
 class DeliveryOptionview(APIView):
@@ -11,12 +11,13 @@ class DeliveryOptionview(APIView):
         queryset = DeliveryOption.objects.all()
         serializer = DeliveryOptionSerializer(queryset)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def post(self,request, deliveryoption_name):
+        deliveryoption = DeliveryOption.objects.get(name = deliveryoption_name)
+        address = DeliveryAddress.objects.create(user = request.user, delivery_option = deliveryoption)
+        address.save()
+        return Response( status=status.HTTP_202_ACCEPTED)
 
-class DeliveryZoneView(APIView):
-    def get(self, request):
-        deliveryzone = DeliveryZone.objects.all()
-        serializer = DeliveryZoneSerializer(deliveryzone)
-        return Response(serializer.data, status=status.HTTP_200_OK)
     
 class DeliveryAddressListCreateView(ListCreateAPIView):
     serializer_class = DeliveryAddressSerializer

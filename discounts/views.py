@@ -35,17 +35,7 @@ class CouponApplyView(APIView):
         if not cart:
             return Response({"detail": "User cart not found."}, status=status.HTTP_400_BAD_REQUEST)
         
-        total_price = Decimal(cart.get_total_price())
-        discount_percentage = Decimal(coupon.discount_percentage)
-        discount = (discount_percentage / Decimal(100)) * total_price
-        if discount > coupon.maximum_discount:
-            discount = coupon.maximum_discount
-        new_total = total_price - discount
-        cart.discount_applied = discount
-        cart.total_price_after_discount = new_total
+        cart.coupon = coupon
         cart.save()
-        return Response({
-            "detail": "Coupon applied successfully.",
-            "new_total": new_total,
-            "discount": discount
-        }, status=status.HTTP_200_OK)
+        return Response({"detail": "Coupon applied successfully."}, status=status.HTTP_200_OK)
+

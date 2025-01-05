@@ -1,18 +1,14 @@
 from rest_framework import serializers
-from .models import DeliveryZone, DeliveryOption, DeliveryAddress, Delivery
+from .models import DeliveryOption, DeliveryAddress, Delivery
 
-class DeliveryZoneSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = DeliveryZone
-        fields = ['id', 'name', 'delivery_charge']
+
 
 
 class DeliveryOptionSerializer(serializers.ModelSerializer):
-    zone = DeliveryZoneSerializer(many=True, read_only=True)
 
     class Meta:
         model = DeliveryOption
-        fields = ['id', 'name', 'delivery_fee', 'estimated_time', 'zone']
+        fields = ['id', 'name', 'delivery_fee', 'estimated_time']
 
 
 class DeliveryAddressSerializer(serializers.ModelSerializer):
