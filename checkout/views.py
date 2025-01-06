@@ -1,13 +1,12 @@
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializer import CheckOutSerializer, CheckOutItemSerializer
+from .serializer import CheckOutSerializer
 from .models import CheckOut, CheckOutItem
 from cart.models import Cart, CartItem
 from products.models import Product
 from discounts.models import Coupon
 from django.shortcuts import get_object_or_404
-from decimal import Decimal
 
 class CheckOutCreateView(APIView):
     def post(self, request):
@@ -17,10 +16,10 @@ class CheckOutCreateView(APIView):
         if not cart_items.exists():
             return Response({"error": "Cart is empty"}, status=status.HTTP_400_BAD_REQUEST)
         
-        check_out, created = CheckOut.objects.get_or_create(
-            user=request.user,
-            coupon=cart.coupon
-        )
+        check_out, created = CheckOut.objects.get_or_create(user=request.user,)
+        if cart.coupon:
+            check_out.coupon = cart.coupon
+            check_out.save()
         
         for cart_item in cart_items:
             CheckOutItem.objects.get_or_create(

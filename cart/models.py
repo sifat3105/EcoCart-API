@@ -10,17 +10,11 @@ class Cart(models.Model):
 
     def __str__(self):
         return f"Cart for {self.user.username}"
-    
-    def get_shipping_fee(self):
-        shipping_fee = 70 if self.items.exists() else 0
-        return self.shipping_fee
-
 
     def get_total_price(self):
         item_total = sum(item.quantity * item.product.price for item in self.items.all())
         return item_total 
 
-    
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, related_name='items', on_delete=models.CASCADE)
@@ -28,7 +22,7 @@ class CartItem(models.Model):
     quantity = models.PositiveIntegerField(default=0)
 
     def __str__(self):
-        return f"{self.product.name} - {self.quantity}"
+        return f"{self.cart.user}'s Carts-Item {self.product.name} - {self.quantity}"
     
     def get_total_price(self):
         return self.product.price * self.quantity
