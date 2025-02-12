@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+    <h2>Welcome, {{ user.username }}!</h2>
+    <p>Your Store: {{ user.store_name }}</p>
+    <p>Email: {{ user.email }}</p>
+    <p><a href="{% url 'logout' %}">Logout</a></p>
+</body>
+</html>

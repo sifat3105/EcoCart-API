@@ -51,7 +51,8 @@ INSTALLED_APPS = [
     'analytics',
     'marketing',
     'delivery',
-    'checkout'
+    'checkout',
+    'seller_accounts'
 ]
 
 MIDDLEWARE = [
@@ -66,7 +67,7 @@ MIDDLEWARE = [
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',  # Default permission for all views
+        'rest_framework.permissions.AllowAny', 
     ],
 }
 
@@ -75,7 +76,7 @@ ROOT_URLCONF = 'EcoCart.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR, 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

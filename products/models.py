@@ -1,6 +1,7 @@
 from django.db import models
 import uuid
 from django.utils.text import slugify
+from seller_accounts.models import Seller
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -11,6 +12,7 @@ class Category(models.Model):
 
 
 class Product(models.Model):
+    seller = models.ForeignKey(Seller, on_delete=models.CASCADE, related_name="products")
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     slug = models.CharField(max_length=50, unique=True, blank=True)
     name = models.CharField(max_length=255)

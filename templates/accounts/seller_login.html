@@ -1,0 +1,15 @@
+<!-- seller_login.html -->
+<h2>Seller Login</h2>
+<form method="post">
+    {% csrf_token %}
+    {% if message %}
+        <p style="color: green;">{{ message }}</p>
+    {% endif %}
+    {{ form.as_p }}
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    <button type="submit">Login</button>
+</form>
+<p>Don't have an account? <a href="{% url 'register' %}">Register here</a>.</p>
+<p>Forgot your password? <a href="">Reset it here</a>.</p>
