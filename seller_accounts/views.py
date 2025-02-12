@@ -30,16 +30,18 @@ def seller_register(request):
     if request.method == "POST":
         form = SellerSignupForm(request.POST)
         if form.is_valid():
+            otp = generate_otp()
             user = form.save(commit=False)
             user.is_active = False
             user.save()
 
-            otp = generate_otp()
             seller = form.instance
+            seller.user = user
+            seller.is_active = False
             seller.otp = otp
             seller.save()
             send_otp_email(request, user.email, otp)
-            return redirect("accounts:verify_otp", user_id=user.id)
+            return redirect("seller:verify-otp", user_id=user.id)
     else:
         form = SellerSignupForm()
     return render(request, "accounts/register.html", {"form": form})
